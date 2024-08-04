@@ -1,0 +1,55 @@
+services:
+  logify-script:
+    build:
+      context: ./logify
+    pull_policy: build
+    container_name: logify
+    stop_grace_period: 1s
+    links:
+      - fluentd
+    depends_on:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        tag: docker.logify
+  # nginx:
+  #   image: evertonagilar/nginx-helloworld:latest
+  #   container_name: nginx
+  #   ports:
+  #     - '80:80'
+  #   links:
+  #     - fluentd
+  #   depends_on:
+  #     - fluentd
+  #   logging:
+  #     driver: "fluentd"
+  #     options:
+  #       tag: docker.nginx
+  # sie:
+  #   image: registry.ufsm.br/ufsm-sieweb
+  #   container_name: sie
+  #   ports:
+  #     - '8080:8080'
+  #   env_file: 
+  #     - ./sie/profile-dev.env
+  #   volumes:
+  #     - ./sie/logging.properties:/opt/payara/appserver/glassfish/domains/domain1/config/logging.properties
+  #   links:
+  #     - fluentd
+  #   depends_on:
+  #     - fluentd
+  #   logging:
+  #     driver: "fluentd"
+  #     options:
+  #       tag: docker.sie
+  fluentd:
+    build:
+      context: ./fluentd
+    pull_policy: build
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+    container_name: fluent
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
