@@ -27,7 +27,7 @@ services:
   #     options:
   #       tag: docker.nginx
   sie:
-    image: registry.ufsm.br/ufsm-sieweb
+    image: registry.ufsm.br/ufsm-sieweb-develop
     container_name: sie
     ports:
       - '8080:8080'
@@ -50,8 +50,8 @@ services:
     volumes:
       - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
     container_name: fluent
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     ports:
       - "24224:24224"
       - "24224:24224/udp"
